@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>¿Quieres ser mi Valentine?</title>
+
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #ffd1dc, #ff7eb3 40%, #ff4d6d 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  color: #fff;
+}
+
+.container {
+  text-align: center;
+  padding: 32px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  max-width: 560px;
+  width: min(92vw, 560px);
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #fff;
+  margin-bottom: 16px;
+  animation: latido 1.2s infinite;
+}
+
+p.subtitulo {
+  font-size: 1.1rem;
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes latido{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+
+button {
+  font-size: 1.2rem;
+  padding: 14px 28px;
+  margin: 10px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+}
+
+button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+#si {
+  background: #ff4d6d;
+  color: white;
+  box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
+}
+
+#no {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.final {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, #ff9a9e, #ff4d6d 60%, #1b1b1b 100%);
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 3rem);
+  animation: fade 1s forwards;
+  padding: 24px;
+}
+
+.final p {
+  font-size: 1.25rem;
+  margin-top: 12px;
+  max-width: 720px;
+}
+
+@keyframes fade{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.corazon {
+  position: absolute;
+  font-size: 2rem;
+  animation: flotar 4s linear infinite;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  animation: brillo 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes flotar{
+  0%{transform:translateY(0);opacity:1}
+  100%{transform:translateY(-100vh);opacity:0}
+}
+
+@keyframes brillo {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="pregunta" aria-live="polite">
+  <h1>¿Quieres ser mi Valentine? ❤️</h1>
+  <p class="subtitulo">Prometo risas, café y un plan precioso contigo.</p>
+  <button id="si" type="button">Sí, quiero</button>
+  <button id="no" type="button">No por ahora</button>
+</div>
+
+<div class="final" id="final" role="dialog" aria-live="assertive">
+  <div>💘 ¡Gracias por decir sí! 💘</div>
+  <p id="mensaje"></p>
+</div>
+
+<script>
+"use strict";
+
+/**
+ * Configuración centralizada para facilitar cambios futuros.
+ */
+const CONFIG = Object.freeze({
+  yesScaleStep: 0.15,
+  yesScaleMax: 1.8,
+  heartsIntervalMs: 220,
+  heartsLifetimeMs: 4000,
+  sparkleLifetimeMs: 2000,
+  noButtonDodgePx: 120,
+  finalMessage: "Gracias por hacer este momento especial. ¿Celebramos con tu plan favorito?",
+  yesButtonAltText: "¿Segura? 😉",
+});
+
+const state = {
+  yesScale: 1,
+  heartsTimerId: null,
+};
+
+/**
+ * Recupera un elemento requerido y lanza un error si no existe.
+ * @param {string} id
+ * @returns {HTMLElement}
+ */
+function getRequiredElement(id) {
+  const element = document.getElementById(id);
+  if (!element) {
+    throw new Error(`Elemento requerido no encontrado: ${id}`);
+  }
+  return element;
+}
+
+/**
+ * Inicializa referencias a elementos del DOM.
+ */
+function createDomRefs() {
+  return {
+    yesButton: getRequiredElement("si"),
+    noButton: getRequiredElement("no"),
+    questionContainer: getRequiredElement("pregunta"),
+    finalContainer: getRequiredElement("final"),
+    finalMessage: getRequiredElement("mensaje"),
+  };
+}
+
+/**
+ * Actualiza la escala del botón de aceptación.
+ * @param {HTMLButtonElement} yesButton
+ */
+function updateYesButtonScale(yesButton) {
+  state.yesScale = Math.min(state.yesScale + CONFIG.yesScaleStep, CONFIG.yesScaleMax);
+  yesButton.style.transform = `scale(${state.yesScale})`;
+}
+
+/**
+ * Mueve el botón "No" de forma segura dentro del viewport.
+ * @param {HTMLButtonElement} noButton
+ */
+function dodgeNoButton(noButton) {
+  const randomX = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
+  const randomY = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
+  noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
+}
+
+/**
+ * Genera un corazón flotante.
+ */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "corazon";
+  heart.textContent = "❤️";
+  heart.style.left = `${Math.random() * 100}vw`;
+  heart.style.bottom = "0px";
+  document.body.appendChild(heart);
+
+  window.setTimeout(() => heart.remove(), CONFIG.heartsLifetimeMs);
+}
+
+/**
+ * Genera un brillo breve en el centro.
+ */
+function createSparkle() {
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.left = `${50 + (Math.random() - 0.5) * 20}%`;
+  sparkle.style.top = `${45 + (Math.random() - 0.5) * 20}%`;
+  document.body.appendChild(sparkle);
+
+  window.setTimeout(() => sparkle.remove(), CONFIG.sparkleLifetimeMs);
+}
+
+/**
+ * Inicia animaciones de celebración.
+ */
+function startCelebration() {
+  if (state.heartsTimerId) {
+    return;
+  }
+
+  state.heartsTimerId = window.setInterval(createHeart, CONFIG.heartsIntervalMs);
+  window.setInterval(createSparkle, CONFIG.sparkleLifetimeMs);
+}
+
+/**
+ * Maneja el flujo de aceptación.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function handleYesClick(dom) {
+  dom.questionContainer.style.display = "none";
+  dom.finalContainer.style.display = "flex";
+  dom.finalMessage.textContent = CONFIG.finalMessage;
+  startCelebration();
+}
+
+/**
+ * Maneja el flujo de rechazo juguetón.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function handleNoClick(dom) {
+  updateYesButtonScale(dom.yesButton);
+  dom.yesButton.textContent = CONFIG.yesButtonAltText;
+  dodgeNoButton(dom.noButton);
+}
+
+/**
+ * Registra eventos de interacción.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function registerEventHandlers(dom) {
+  dom.noButton.addEventListener("click", () => handleNoClick(dom));
+  dom.noButton.addEventListener("mouseenter", () => dodgeNoButton(dom.noButton));
+  dom.yesButton.addEventListener("click", () => handleYesClick(dom));
+}
+
+/**
+ * Inicializa la experiencia.
+ */
+function init() {
+  try {
+    const dom = createDomRefs();
+    registerEventHandlers(dom);
+  } catch (error) {
+    console.error("Error al inicializar la página:", error);
+    alert("Ocurrió un error al iniciar la experiencia. Intenta recargar.");
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
