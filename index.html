@@ -112,6 +112,59 @@ button:focus-visible {
   max-width: 720px;
 }
 
+.respuestas {
+  margin-top: 20px;
+  width: min(92vw, 620px);
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 16px;
+  text-align: left;
+}
+
+.respuestas h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+}
+
+.respuestas-controls {
+  display: grid;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.respuestas-controls label {
+  font-weight: 600;
+}
+
+.respuestas-controls select,
+.respuestas-controls input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+}
+
+.respuestas-input {
+  display: flex;
+  gap: 10px;
+}
+
+.respuestas-input button {
+  width: auto;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #ff4d6d;
+  border-radius: 999px;
+}
+
+.respuesta-activa {
+  margin: 12px 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
 .final ul {
   list-style: none;
   padding: 0;
@@ -188,6 +241,20 @@ button:focus-visible {
 <div class="final" id="final" role="dialog" aria-live="assertive">
   <div>💘 ¡Gracias por decir sí! 💘</div>
   <p id="mensaje"></p>
+  <div class="respuestas" id="respuestas">
+    <h2>Respuestas disponibles</h2>
+    <div class="respuestas-controls">
+      <label for="respuesta-select">Elige una respuesta</label>
+      <select id="respuesta-select"></select>
+      <label for="respuesta-personalizada">Añade una respuesta personalizada</label>
+      <div class="respuestas-input">
+        <input id="respuesta-personalizada" type="text" placeholder="Escribe tu respuesta" maxlength="120">
+        <button id="agregar-respuesta" type="button">Agregar</button>
+      </div>
+    </div>
+    <p class="respuesta-activa" id="respuesta-activa"></p>
+    <ul id="lista-respuestas"></ul>
+  </div>
   <ul id="lista"></ul>
 </div>
 
@@ -206,7 +273,7 @@ const CONFIG = Object.freeze({
   noButtonDodgePx: 120,
   finalMessage: "Gracias por hacer este momento especial. Ahora sí, ¡planazo contigo!",
   yesButtonAltText: "¿Segura? 😉",
-  yesUnlockTaps: 10,
+  yesUnlockTaps: 1,
   funnyResponses: [
     "Uy, casi… pero no 😜",
     "Te vi, picarona/o 😏",
@@ -238,6 +305,7 @@ const state = {
   yesScale: 1,
   heartsTimerId: null,
   tapCount: 0,
+  responsesReady: false,
 };
 
 /**
@@ -264,6 +332,12 @@ function createDomRefs() {
     finalContainer: getRequiredElement("final"),
     finalMessage: getRequiredElement("mensaje"),
     finalList: getRequiredElement("lista"),
+    responsesContainer: getRequiredElement("respuestas"),
+    responseSelect: getRequiredElement("respuesta-select"),
+    customResponseInput: getRequiredElement("respuesta-personalizada"),
+    addResponseButton: getRequiredElement("agregar-respuesta"),
+    activeResponse: getRequiredElement("respuesta-activa"),
+    responseList: getRequiredElement("lista-respuestas"),
     statusMessage: getRequiredElement("estado"),
   };
 }
@@ -308,6 +382,61 @@ function shuffleButtons(dom) {
 function showFunnyMessage(dom) {
   const message = CONFIG.funnyResponses[Math.floor(Math.random() * CONFIG.funnyResponses.length)];
   dom.statusMessage.textContent = message;
+}
+
+/**
+ * Renderiza la lista de respuestas disponibles.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ * @param {string[]} responses
+ */
+function renderResponseList(dom, responses) {
+  dom.responseList.innerHTML = responses.map((item) => `<li>${item}</li>`).join("");
+}
+
+/**
+ * Actualiza la respuesta activa mostrada.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ * @param {string} response
+ */
+function updateActiveResponse(dom, response) {
+  dom.activeResponse.textContent = response ? `Respuesta seleccionada: ${response}` : "";
+}
+
+/**
+ * Inicializa el selector de respuestas.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function initResponses(dom) {
+  const responses = [...CONFIG.funnyResponses];
+  dom.responseSelect.innerHTML = responses
+    .map((response, index) => `<option value="${index}">${response}</option>`)
+    .join("");
+
+  renderResponseList(dom, responses);
+  updateActiveResponse(dom, responses[0]);
+
+  dom.responseSelect.addEventListener("change", () => {
+    const index = Number(dom.responseSelect.value);
+    updateActiveResponse(dom, responses[index] || "");
+  });
+
+  dom.addResponseButton.addEventListener("click", () => {
+    const value = dom.customResponseInput.value.trim();
+    if (!value) {
+      dom.customResponseInput.focus();
+      return;
+    }
+
+    responses.push(value);
+    dom.responseSelect.insertAdjacentHTML(
+      "beforeend",
+      `<option value="${responses.length - 1}">${value}</option>`
+    );
+    renderResponseList(dom, responses);
+    dom.responseSelect.value = String(responses.length - 1);
+    updateActiveResponse(dom, value);
+    dom.customResponseInput.value = "";
+  });
 }
 
 /**
@@ -368,6 +497,10 @@ function handleYesClick(dom) {
   dom.finalContainer.style.display = "flex";
   dom.finalMessage.textContent = CONFIG.finalMessage;
   dom.finalList.innerHTML = CONFIG.funnyFinalList.map((item) => `<li>${item}</li>`).join("");
+  if (!state.responsesReady) {
+    initResponses(dom);
+    state.responsesReady = true;
+  }
   startCelebration();
 }
 
