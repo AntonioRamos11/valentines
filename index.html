@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>¿Quieres ser mi Valentine?</title>
 
 <style>
@@ -15,30 +16,46 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
   color: #fff;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .container {
   text-align: center;
-  padding: 32px;
+  padding: 28px 22px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-  max-width: 560px;
-  width: min(92vw, 560px);
+  max-width: 520px;
+  width: min(94vw, 520px);
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
   color: #fff;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   animation: latido 1.2s infinite;
 }
 
 p.subtitulo {
-  font-size: 1.1rem;
-  margin: 0 0 28px;
+  font-size: 1.05rem;
+  margin: 0 0 18px;
   color: rgba(255, 255, 255, 0.9);
+}
+
+.estado {
+  font-size: 1rem;
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.95);
+  min-height: 24px;
+}
+
+.botonera {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
 }
 
 @keyframes latido{
@@ -48,14 +65,14 @@ p.subtitulo {
 }
 
 button {
-  font-size: 1.2rem;
-  padding: 14px 28px;
-  margin: 10px;
+  font-size: 1.1rem;
+  padding: 14px 20px;
   border: none;
   border-radius: 999px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   font-weight: 600;
+  width: 100%;
 }
 
 button:focus-visible {
@@ -95,6 +112,21 @@ button:focus-visible {
   max-width: 720px;
 }
 
+.final ul {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  font-size: 1.05rem;
+  display: grid;
+  gap: 8px;
+}
+
+.final li {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
 @keyframes fade{
   from{opacity:0}
   to{opacity:1}
@@ -126,6 +158,18 @@ button:focus-visible {
   0% { transform: scale(1); opacity: 1; }
   100% { transform: scale(0); opacity: 0; }
 }
+
+@media (min-width: 600px) {
+  .botonera {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  button {
+    width: auto;
+    min-width: 180px;
+  }
+}
 </style>
 </head>
 
@@ -134,13 +178,17 @@ button:focus-visible {
 <div class="container" id="pregunta" aria-live="polite">
   <h1>¿Quieres ser mi Valentine? ❤️</h1>
   <p class="subtitulo">Prometo risas, café y un plan precioso contigo.</p>
-  <button id="si" type="button">Sí, quiero</button>
-  <button id="no" type="button">No por ahora</button>
+  <p class="estado" id="estado">Solo vale tocar con cariño 😏</p>
+  <div class="botonera" id="botonera">
+    <button id="si" type="button">Sí, quiero</button>
+    <button id="no" type="button">No por ahora</button>
+  </div>
 </div>
 
 <div class="final" id="final" role="dialog" aria-live="assertive">
   <div>💘 ¡Gracias por decir sí! 💘</div>
   <p id="mensaje"></p>
+  <ul id="lista"></ul>
 </div>
 
 <script>
@@ -156,13 +204,40 @@ const CONFIG = Object.freeze({
   heartsLifetimeMs: 4000,
   sparkleLifetimeMs: 2000,
   noButtonDodgePx: 120,
-  finalMessage: "Gracias por hacer este momento especial. ¿Celebramos con tu plan favorito?",
+  finalMessage: "Gracias por hacer este momento especial. Ahora sí, ¡planazo contigo!",
   yesButtonAltText: "¿Segura? 😉",
+  yesUnlockTaps: 10,
+  funnyResponses: [
+    "Uy, casi… pero no 😜",
+    "Te vi, picarona/o 😏",
+    "El botón se hace el tímido 🤭",
+    "Sigue intentando, vas bien 💘",
+    "¡Jaja! Eso estuvo cerca 😂",
+    "Recalculando sentimientos… 🤖",
+    "Modo travieso activado ✨",
+    "Ups, se movió solo 🙈",
+    "No tan rápido, cupido 🏹",
+    "Te debo una risa más 😆",
+  ],
+  funnyFinalList: [
+    "Un meme sorpresa personalizado",
+    "Un baile ridículo de 10 segundos",
+    "Un brindis con tu bebida favorita",
+    "Un mini reto: 3 piropos creativos",
+    "Un abrazo nivel oso 🐻",
+  ],
+  labelPairs: [
+    ["Sí, obvio", "Nope"],
+    ["Acepto", "Me hago el/la difícil"],
+    ["Dale", "Ni en broma"],
+    ["Sííí", "No… tal vez"],
+  ],
 });
 
 const state = {
   yesScale: 1,
   heartsTimerId: null,
+  tapCount: 0,
 };
 
 /**
@@ -188,6 +263,8 @@ function createDomRefs() {
     questionContainer: getRequiredElement("pregunta"),
     finalContainer: getRequiredElement("final"),
     finalMessage: getRequiredElement("mensaje"),
+    finalList: getRequiredElement("lista"),
+    statusMessage: getRequiredElement("estado"),
   };
 }
 
@@ -208,6 +285,29 @@ function dodgeNoButton(noButton) {
   const randomX = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
   const randomY = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
   noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
+}
+
+/**
+ * Cambia etiquetas y orden de botones de forma aleatoria.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function shuffleButtons(dom) {
+  const pair = CONFIG.labelPairs[Math.floor(Math.random() * CONFIG.labelPairs.length)];
+  dom.yesButton.textContent = pair[0];
+  dom.noButton.textContent = pair[1];
+
+  const swap = Math.random() > 0.5;
+  dom.yesButton.style.order = swap ? "2" : "1";
+  dom.noButton.style.order = swap ? "1" : "2";
+}
+
+/**
+ * Muestra un mensaje divertido.
+ * @param {ReturnType<typeof createDomRefs>} dom
+ */
+function showFunnyMessage(dom) {
+  const message = CONFIG.funnyResponses[Math.floor(Math.random() * CONFIG.funnyResponses.length)];
+  dom.statusMessage.textContent = message;
 }
 
 /**
@@ -254,9 +354,20 @@ function startCelebration() {
  * @param {ReturnType<typeof createDomRefs>} dom
  */
 function handleYesClick(dom) {
+  state.tapCount += 1;
+  updateYesButtonScale(dom.yesButton);
+  showFunnyMessage(dom);
+  shuffleButtons(dom);
+
+  if (state.tapCount < CONFIG.yesUnlockTaps) {
+    dodgeNoButton(dom.noButton);
+    return;
+  }
+
   dom.questionContainer.style.display = "none";
   dom.finalContainer.style.display = "flex";
   dom.finalMessage.textContent = CONFIG.finalMessage;
+  dom.finalList.innerHTML = CONFIG.funnyFinalList.map((item) => `<li>${item}</li>`).join("");
   startCelebration();
 }
 
@@ -265,8 +376,11 @@ function handleYesClick(dom) {
  * @param {ReturnType<typeof createDomRefs>} dom
  */
 function handleNoClick(dom) {
+  state.tapCount += 1;
   updateYesButtonScale(dom.yesButton);
   dom.yesButton.textContent = CONFIG.yesButtonAltText;
+  showFunnyMessage(dom);
+  shuffleButtons(dom);
   dodgeNoButton(dom.noButton);
 }
 
@@ -278,6 +392,8 @@ function registerEventHandlers(dom) {
   dom.noButton.addEventListener("click", () => handleNoClick(dom));
   dom.noButton.addEventListener("mouseenter", () => dodgeNoButton(dom.noButton));
   dom.yesButton.addEventListener("click", () => handleYesClick(dom));
+  dom.noButton.addEventListener("touchstart", () => dodgeNoButton(dom.noButton), { passive: true });
+  dom.yesButton.addEventListener("touchstart", () => handleYesClick(dom), { passive: true });
 }
 
 /**
