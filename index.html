@@ -1,549 +1,982 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Meghan, ¿quieres ser mi Valentine?</title>
-
-<style>
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: radial-gradient(circle at top, #ffd1dc, #ff7eb3 40%, #ff4d6d 100%);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden;
-  color: #fff;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.container {
-  text-align: center;
-  padding: 28px 22px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-  max-width: 520px;
-  width: min(94vw, 520px);
-}
-
-h1 {
-  font-size: clamp(1.9rem, 6vw, 2.8rem);
-  color: #fff;
-  margin-bottom: 12px;
-  animation: latido 1.2s infinite;
-}
-
-p.subtitulo {
-  font-size: 1.05rem;
-  margin: 0 0 18px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.estado {
-  font-size: 1rem;
-  margin: 0 0 18px;
-  color: rgba(255, 255, 255, 0.95);
-  min-height: 24px;
-}
-
-.botonera {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: stretch;
-}
-
-@keyframes latido{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
-}
-
-button {
-  font-size: 1.1rem;
-  padding: 14px 20px;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  font-weight: 600;
-  width: 100%;
-}
-
-button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
-#si {
-  background: #ff4d6d;
-  color: white;
-  box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
-}
-
-#no {
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-}
-
-.final {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top, #ff9a9e, #ff4d6d 60%, #1b1b1b 100%);
-  color: white;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  font-size: clamp(2rem, 5vw, 3rem);
-  animation: fade 1s forwards;
-  padding: 24px;
-}
-
-.final p {
-  font-size: 1.25rem;
-  margin-top: 12px;
-  max-width: 720px;
-}
-
-.respuestas {
-  margin-top: 20px;
-  width: min(92vw, 620px);
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 16px;
-  text-align: left;
-}
-
-.respuestas h2 {
-  margin: 0 0 12px;
-  font-size: 1.2rem;
-}
-
-.respuestas-controls {
-  display: grid;
-  gap: 10px;
-  font-size: 0.95rem;
-}
-
-.respuestas-controls label {
-  font-weight: 600;
-}
-
-.respuestas-controls select,
-.respuestas-controls input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 1rem;
-}
-
-.respuestas-input {
-  display: flex;
-  gap: 10px;
-}
-
-.respuestas-input button {
-  width: auto;
-  padding: 10px 16px;
-  font-size: 0.95rem;
-  background: #fff;
-  color: #ff4d6d;
-  border-radius: 999px;
-}
-
-.respuesta-activa {
-  margin: 12px 0 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-.final ul {
-  list-style: none;
-  padding: 0;
-  margin: 18px 0 0;
-  font-size: 1.05rem;
-  display: grid;
-  gap: 8px;
-}
-
-.final li {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 10px 14px;
-  border-radius: 14px;
-}
-
-@keyframes fade{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-.corazon {
-  position: absolute;
-  font-size: 2rem;
-  animation: flotar 4s linear infinite;
-  pointer-events: none;
-}
-
-.sparkle {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  animation: brillo 2s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes flotar{
-  0%{transform:translateY(0);opacity:1}
-  100%{transform:translateY(-100vh);opacity:0}
-}
-
-@keyframes brillo {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0); opacity: 0; }
-}
-
-@media (min-width: 600px) {
-  .botonera {
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  button {
-    width: auto;
-    min-width: 180px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="container" id="pregunta" aria-live="polite">
-  <h1>Meghan, ¿quieres ser mi Valentine? ❤️</h1>
-  <p class="subtitulo">Meghan, prometo risas, café y un plan precioso contigo.</p>
-  <p class="estado" id="estado">Solo vale tocar con cariño 😏</p>
-  <div class="botonera" id="botonera">
-    <button id="si" type="button">Sí, quiero</button>
-    <button id="no" type="button">No por ahora</button>
-  </div>
-</div>
-
-<div class="final" id="final" role="dialog" aria-live="assertive">
-  <div>💘 ¡Gracias por decir sí! 💘</div>
-  <p id="mensaje"></p>
-  <div class="respuestas" id="respuestas">
-    <h2>Respuestas disponibles</h2>
-    <div class="respuestas-controls">
-      <label for="respuesta-select">Elige una respuesta</label>
-      <select id="respuesta-select"></select>
-      <label for="respuesta-personalizada">Añade una respuesta personalizada</label>
-      <div class="respuestas-input">
-        <input id="respuesta-personalizada" type="text" placeholder="Escribe tu respuesta" maxlength="120">
-        <button id="agregar-respuesta" type="button">Agregar</button>
-      </div>
-    </div>
-    <p class="respuesta-activa" id="respuesta-activa"></p>
-    <ul id="lista-respuestas"></ul>
-  </div>
-  <ul id="lista"></ul>
-</div>
-
-<script>
-"use strict";
-
-/**
- * Configuración centralizada para facilitar cambios futuros.
- */
-const CONFIG = Object.freeze({
-  yesScaleStep: 0.15,
-  yesScaleMax: 1.8,
-  heartsIntervalMs: 220,
-  heartsLifetimeMs: 4000,
-  sparkleLifetimeMs: 2000,
-  noButtonDodgePx: 120,
-  finalMessage: "Meghan, gracias por hacer este momento especial. Ahora sí, ¡planazo contigo!",
-  yesButtonAltText: "¿Segura? 😉",
-  yesUnlockTaps: 1,
-  funnyResponses: [
-    "Uy, casi… pero no 😜",
-    "Te vi, picarona/o 😏",
-    "El botón se hace el tímido 🤭",
-    "Sigue intentando, vas bien 💘",
-    "¡Jaja! Eso estuvo cerca 😂",
-    "Recalculando sentimientos… 🤖",
-    "Modo travieso activado ✨",
-    "Ups, se movió solo 🙈",
-    "No tan rápido, cupido 🏹",
-    "Te debo una risa más 😆",
-  ],
-  funnyFinalList: [
-    "Un meme sorpresa personalizado",
-    "Un baile ridículo de 10 segundos",
-    "Un brindis con tu bebida favorita",
-    "Un mini reto: 3 piropos creativos",
-    "Un abrazo nivel oso 🐻",
-  ],
-  labelPairs: [
-    ["Sí, obvio", "Nope"],
-    ["Acepto", "Me hago el/la difícil"],
-    ["Dale", "Ni en broma"],
-    ["Sííí", "No… tal vez"],
-  ],
-});
-
-const state = {
-  yesScale: 1,
-  heartsTimerId: null,
-  tapCount: 0,
-  responsesReady: false,
-};
-
-/**
- * Recupera un elemento requerido y lanza un error si no existe.
- * @param {string} id
- * @returns {HTMLElement}
- */
-function getRequiredElement(id) {
-  const element = document.getElementById(id);
-  if (!element) {
-    throw new Error(`Elemento requerido no encontrado: ${id}`);
-  }
-  return element;
-}
-
-/**
- * Inicializa referencias a elementos del DOM.
- */
-function createDomRefs() {
-  return {
-    yesButton: getRequiredElement("si"),
-    noButton: getRequiredElement("no"),
-    questionContainer: getRequiredElement("pregunta"),
-    finalContainer: getRequiredElement("final"),
-    finalMessage: getRequiredElement("mensaje"),
-    finalList: getRequiredElement("lista"),
-    responsesContainer: getRequiredElement("respuestas"),
-    responseSelect: getRequiredElement("respuesta-select"),
-    customResponseInput: getRequiredElement("respuesta-personalizada"),
-    addResponseButton: getRequiredElement("agregar-respuesta"),
-    activeResponse: getRequiredElement("respuesta-activa"),
-    responseList: getRequiredElement("lista-respuestas"),
-    statusMessage: getRequiredElement("estado"),
-  };
-}
-
-/**
- * Actualiza la escala del botón de aceptación.
- * @param {HTMLButtonElement} yesButton
- */
-function updateYesButtonScale(yesButton) {
-  state.yesScale = Math.min(state.yesScale + CONFIG.yesScaleStep, CONFIG.yesScaleMax);
-  yesButton.style.transform = `scale(${state.yesScale})`;
-}
-
-/**
- * Mueve el botón "No" de forma segura dentro del viewport.
- * @param {HTMLButtonElement} noButton
- */
-function dodgeNoButton(noButton) {
-  const randomX = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
-  const randomY = (Math.random() - 0.5) * CONFIG.noButtonDodgePx;
-  noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
-}
-
-/**
- * Cambia etiquetas y orden de botones de forma aleatoria.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function shuffleButtons(dom) {
-  const pair = CONFIG.labelPairs[Math.floor(Math.random() * CONFIG.labelPairs.length)];
-  dom.yesButton.textContent = pair[0];
-  dom.noButton.textContent = pair[1];
-
-  const swap = Math.random() > 0.5;
-  dom.yesButton.style.order = swap ? "2" : "1";
-  dom.noButton.style.order = swap ? "1" : "2";
-}
-
-/**
- * Muestra un mensaje divertido.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function showFunnyMessage(dom) {
-  const message = CONFIG.funnyResponses[Math.floor(Math.random() * CONFIG.funnyResponses.length)];
-  dom.statusMessage.textContent = message;
-}
-
-/**
- * Renderiza la lista de respuestas disponibles.
- * @param {ReturnType<typeof createDomRefs>} dom
- * @param {string[]} responses
- */
-function renderResponseList(dom, responses) {
-  dom.responseList.innerHTML = responses.map((item) => `<li>${item}</li>`).join("");
-}
-
-/**
- * Actualiza la respuesta activa mostrada.
- * @param {ReturnType<typeof createDomRefs>} dom
- * @param {string} response
- */
-function updateActiveResponse(dom, response) {
-  dom.activeResponse.textContent = response ? `Respuesta seleccionada: ${response}` : "";
-}
-
-/**
- * Inicializa el selector de respuestas.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function initResponses(dom) {
-  const responses = [...CONFIG.funnyResponses];
-  dom.responseSelect.innerHTML = responses
-    .map((response, index) => `<option value="${index}">${response}</option>`)
-    .join("");
-
-  renderResponseList(dom, responses);
-  updateActiveResponse(dom, responses[0]);
-
-  dom.responseSelect.addEventListener("change", () => {
-    const index = Number(dom.responseSelect.value);
-    updateActiveResponse(dom, responses[index] || "");
-  });
-
-  dom.addResponseButton.addEventListener("click", () => {
-    const value = dom.customResponseInput.value.trim();
-    if (!value) {
-      dom.customResponseInput.focus();
-      return;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>La Ruta de la Bici y el Café 🚲☕</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-cream: #fdfbf7;
+      --coffee-brown: #5d4037;
+      --coffee-light: #8d6e63;
+      --accent-rose: #f0a6ca;
+      --accent-rose-dark: #b56576;
+      --accent-mint: #b7e4c7;
+      --accent-mint-dark: #52b788;
+      --text-mocha: #3e2723;
+      --text-muted: #6d4c41;
+      --card-bg: #ffffff;
+      --card-border: #f3e5f5;
+      
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-romance: 'Playfair Display', serif;
     }
 
-    responses.push(value);
-    dom.responseSelect.insertAdjacentHTML(
-      "beforeend",
-      `<option value="${responses.length - 1}">${value}</option>`
-    );
-    renderResponseList(dom, responses);
-    dom.responseSelect.value = String(responses.length - 1);
-    updateActiveResponse(dom, value);
-    dom.customResponseInput.value = "";
-  });
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-/**
- * Genera un corazón flotante.
- */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.className = "corazon";
-  heart.textContent = "❤️";
-  heart.style.left = `${Math.random() * 100}vw`;
-  heart.style.bottom = "0px";
-  document.body.appendChild(heart);
+    body {
+      background: linear-gradient(to bottom, #fdfbf7 0%, #f6efe2 100%);
+      color: var(--text-mocha);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+      position: relative;
+    }
 
-  window.setTimeout(() => heart.remove(), CONFIG.heartsLifetimeMs);
-}
+    /* Fondo decorativo */
+    .background-decorations {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-/**
- * Genera un brillo breve en el centro.
- */
-function createSparkle() {
-  const sparkle = document.createElement("div");
-  sparkle.className = "sparkle";
-  sparkle.style.left = `${50 + (Math.random() - 0.5) * 20}%`;
-  sparkle.style.top = `${45 + (Math.random() - 0.5) * 20}%`;
-  document.body.appendChild(sparkle);
+    .decor-item {
+      position: absolute;
+      opacity: 0.08;
+      font-size: clamp(20px, 6vw, 40px);
+      transition: transform 0.1s ease-out;
+    }
 
-  window.setTimeout(() => sparkle.remove(), CONFIG.sparkleLifetimeMs);
-}
+    /* ================= COBERTURA DE BIENVENIDA ================= */
+    .intro-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
 
-/**
- * Inicia animaciones de celebración.
- */
-function startCelebration() {
-  if (state.heartsTimerId) {
-    return;
-  }
+    .intro-card {
+      background: var(--card-bg);
+      border: 2px solid #ece0d1;
+      border-radius: 32px;
+      padding: 40px 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 16px 40px rgba(93, 64, 55, 0.08);
+      position: relative;
+    }
 
-  state.heartsTimerId = window.setInterval(createHeart, CONFIG.heartsIntervalMs);
-  window.setInterval(createSparkle, CONFIG.sparkleLifetimeMs);
-}
+    .intro-card::before {
+      content: '☕';
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.2rem;
+      background: var(--bg-cream);
+      padding: 0 10px;
+    }
 
-/**
- * Maneja el flujo de aceptación.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function handleYesClick(dom) {
-  state.tapCount += 1;
-  updateYesButtonScale(dom.yesButton);
-  showFunnyMessage(dom);
-  shuffleButtons(dom);
+    .intro-badge {
+      display: inline-block;
+      background: #f7ede2;
+      color: #b56576;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
 
-  if (state.tapCount < CONFIG.yesUnlockTaps) {
-    dodgeNoButton(dom.noButton);
-    return;
-  }
+    .intro-title {
+      font-family: var(--font-romance);
+      font-size: clamp(2.2rem, 8vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-mocha);
+      margin-bottom: 16px;
+    }
 
-  dom.questionContainer.style.display = "none";
-  dom.finalContainer.style.display = "flex";
-  dom.finalMessage.textContent = CONFIG.finalMessage;
-  dom.finalList.innerHTML = CONFIG.funnyFinalList.map((item) => `<li>${item}</li>`).join("");
-  if (!state.responsesReady) {
-    initResponses(dom);
-    state.responsesReady = true;
-  }
-  startCelebration();
-}
+    .intro-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
 
-/**
- * Maneja el flujo de rechazo juguetón.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function handleNoClick(dom) {
-  state.tapCount += 1;
-  updateYesButtonScale(dom.yesButton);
-  dom.yesButton.textContent = CONFIG.yesButtonAltText;
-  showFunnyMessage(dom);
-  shuffleButtons(dom);
-  dodgeNoButton(dom.noButton);
-}
+    .btn-cozy {
+      background: #8c6239;
+      color: #ffffff;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 18px 36px;
+      border: none;
+      border-radius: 99px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(140, 98, 57, 0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 280px;
+    }
 
-/**
- * Registra eventos de interacción.
- * @param {ReturnType<typeof createDomRefs>} dom
- */
-function registerEventHandlers(dom) {
-  dom.noButton.addEventListener("click", () => handleNoClick(dom));
-  dom.noButton.addEventListener("mouseenter", () => dodgeNoButton(dom.noButton));
-  dom.yesButton.addEventListener("click", () => handleYesClick(dom));
-  dom.noButton.addEventListener("touchstart", () => dodgeNoButton(dom.noButton), { passive: true });
-  dom.yesButton.addEventListener("touchstart", () => handleYesClick(dom), { passive: true });
-}
+    .btn-cozy:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(140, 98, 57, 0.45);
+      background: #704c2b;
+    }
 
-/**
- * Inicializa la experiencia.
- */
-function init() {
-  try {
-    const dom = createDomRefs();
-    registerEventHandlers(dom);
-  } catch (error) {
-    console.error("Error al inicializar la página:", error);
-    alert("Ocurrió un error al iniciar la experiencia. Intenta recargar.");
-  }
-}
+    .btn-cozy:active {
+      transform: translateY(-1px) scale(0.98);
+    }
 
-init();
-</script>
+    /* ================= SECCIÓN DE LA RUTA (TIMELINE) ================= */
+    .route-screen {
+      display: none;
+      width: 100%;
+      position: relative;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 40px;
+      padding-bottom: 80px;
+    }
+
+    .route-screen.active {
+      display: flex;
+    }
+
+    .route-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .route-header h2 {
+      font-family: var(--font-romance);
+      font-size: 2.5rem;
+      color: var(--text-mocha);
+      margin-bottom: 8px;
+    }
+
+    .route-header p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* Contenedor del camino vertical */
+    .timeline-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      height: 3100px; /* Altura fija para el camino */
+      margin: 0 auto;
+      z-index: 10;
+    }
+
+    /* SVG del camino sinuoso */
+    .bike-path-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #bike-path {
+      fill: none;
+      stroke: #ece0d1;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 10, 10;
+      transition: stroke 0.3s;
+    }
+
+    /* Bicicleta animada */
+    #bike-rider {
+      position: absolute;
+      z-index: 100;
+      width: 50px;
+      height: 50px;
+      transform-origin: center center;
+      pointer-events: none;
+      color: #8c6239;
+      filter: drop-shadow(0 4px 8px rgba(93, 64, 55, 0.25));
+    }
+
+    /* ================= ESTACIONES DE CAFÉ (TARJETAS) ================= */
+    .station-card {
+      position: absolute;
+      width: 210px;
+      background: var(--card-bg);
+      border: 1.5px solid #ece0d1;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(93, 64, 55, 0.04);
+      z-index: 50;
+      text-align: left;
+      opacity: 0.15;
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .station-card.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      box-shadow: 0 15px 35px rgba(93, 64, 55, 0.08);
+      border-color: #d6c5b3;
+    }
+
+    /* Ubicación exacta de las tarjetas en desktop/tablet */
+    @media (min-width: 500px) {
+      #station-1 { left: 10px; top: 250px; }
+      #station-2 { right: 10px; top: 850px; }
+      #station-3 { left: 10px; top: 1450px; }
+      #station-4 { right: 10px; top: 2050px; }
+      #station-5 { left: 10px; right: 10px; width: calc(100% - 20px); top: 2680px; }
+    }
+
+    /* Ubicación de las tarjetas en móvil para evitar solapamiento con la bici */
+    @media (max-width: 499px) {
+      .station-card {
+        left: 100px !important;
+        right: 15px !important;
+        width: auto !important;
+      }
+      #station-1 { top: 250px; }
+      #station-2 { top: 850px; }
+      #station-3 { top: 1450px; }
+      #station-4 { top: 2050px; }
+      #station-5 { top: 2680px; }
+    }
+
+    /* Cabecera de la estación */
+    .station-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .coffee-cup-icon {
+      font-size: 1.7rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Animación de vapor del café al activarse */
+    .coffee-cup-icon::before {
+      content: '░';
+      position: absolute;
+      top: -12px;
+      left: 4px;
+      font-size: 0.75rem;
+      color: var(--coffee-light);
+      opacity: 0;
+      font-family: monospace;
+    }
+
+    .station-card.active .coffee-cup-icon::before {
+      animation: steamEffect 2s ease-in-out infinite;
+    }
+
+    @keyframes steamEffect {
+      0% { transform: translateY(0) scaleX(1); opacity: 0; }
+      50% { transform: translateY(-8px) scaleX(1.3); opacity: 0.6; }
+      100% { transform: translateY(-16px) scaleX(0.8); opacity: 0; }
+    }
+
+    .station-date {
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--accent-rose-dark);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .station-title {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-mocha);
+      line-height: 1.2;
+    }
+
+    .station-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    /* Burbuja de chat snip */
+    .chat-snip {
+      background: #fdfbf7;
+      border: 1px solid #f3ebe1;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chat-line {
+      line-height: 1.35;
+    }
+
+    .chat-line.pwd {
+      color: #8c6239;
+      font-weight: 500;
+    }
+
+    .chat-line.amor {
+      color: #b56576;
+      font-weight: 500;
+    }
+
+    /* Estilo del slide de estadísticas (Estación 3) */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .stat-box {
+      background: #fdfbf7;
+      border: 1px solid #f3ebe1;
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-mocha);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* ================= CARTA DE AMOR FINAL (ESTACIÓN 5) ================= */
+    .final-station-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .btn-brew {
+      background: linear-gradient(135deg, #8c6239 0%, #a07148 100%);
+      color: white;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 99px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(140, 98, 57, 0.25);
+      transition: all 0.3s;
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-brew:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(140, 98, 57, 0.35);
+    }
+
+    .love-letter-container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      border: 1px dashed #ece0d1;
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 24px;
+      display: none;
+      text-align: justify;
+      animation: expandLetter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes expandLetter {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .love-letter-title {
+      font-family: var(--font-romance);
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--accent-rose-dark);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .love-letter-body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text-mocha);
+      margin-bottom: 20px;
+    }
+
+    .love-letter-signature {
+      font-family: var(--font-romance);
+      font-size: 1.25rem;
+      font-style: italic;
+      text-align: right;
+      color: #8c6239;
+    }
+
+    /* Caja del generador de sorpresas */
+    .surprise-box {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #f3ebe1;
+      width: 100%;
+    }
+
+    .surprise-quote {
+      background: #fdfbf7;
+      border: 1px dashed #ece0d1;
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+    }
+
+    .surprise-quote.highlight {
+      animation: highlightQuote 0.5s ease-out;
+    }
+
+    @keyframes highlightQuote {
+      0% { transform: scale(1); background: #fceade; }
+      50% { transform: scale(1.03); background: #fad2e1; }
+      100% { transform: scale(1); background: #fdfbf7; }
+    }
+
+    .btn-surprise {
+      background: transparent;
+      border: 2px solid #8c6239;
+      color: #8c6239;
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 10px 20px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-surprise:hover {
+      background: #8c6239;
+      color: white;
+    }
+
+    .route-footer {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Elementos de fondo decorativos -->
+  <div class="background-decorations" id="decor-container"></div>
+
+  <!-- ================= PANTALLA INTRO ================= -->
+  <section class="intro-screen" id="screen-intro">
+    <div class="intro-card">
+      <span class="intro-badge">Bici y Café 🚲☕</span>
+      <h1 class="intro-title">Nuestra Ruta</h1>
+      <p class="intro-subtitle">
+        Una recopilación lúdica y cronológica de nuestra historia de amor, estadísticas y risas extraídas de nuestros chats de WhatsApp.
+      </p>
+      <button class="btn-cozy" id="btn-start-route" type="button">
+        Pedalear por la Ruta 🚲
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= PANTALLA RUTA (TIMELINE) ================= -->
+  <section class="route-screen" id="screen-route">
+    <div class="route-header">
+      <h2>Nuestro Camino</h2>
+      <p>Desliza hacia abajo para recorrer nuestra historia sobre ruedas.</p>
+    </div>
+
+    <!-- Contenedor general del camino y tarjetas -->
+    <div class="timeline-wrapper" id="timeline-container">
+      
+      <!-- SVG del camino sinuoso -->
+      <svg class="bike-path-svg" viewBox="0 0 400 3000" preserveAspectRatio="none">
+        <!-- Camino sinuoso -->
+        <path id="bike-path" d="M 200,100 C 320,300 80,500 200,700 C 320,900 80,1100 200,1300 C 320,1500 80,1700 200,1900 C 320,2100 80,2300 200,2500 C 320,2700 80,2850 200,2950" />
+        
+        <!-- Marcador / Bicicleta del camino -->
+        <g id="bike-rider">
+          <!-- Dibujo SVG Premium de Bicicleta mirando a la derecha -->
+          <g transform="translate(-25, -25)">
+            <!-- Rueda trasera -->
+            <circle cx="12" cy="35" r="9" stroke="#8c6239" stroke-width="2.5" fill="#fff" />
+            <circle cx="12" cy="35" r="3" fill="#8c6239" />
+            <!-- Rueda delantera -->
+            <circle cx="38" cy="35" r="9" stroke="#8c6239" stroke-width="2.5" fill="#fff" />
+            <circle cx="38" cy="35" r="3" fill="#8c6239" />
+            <!-- Cuadro y bielas -->
+            <!-- Vainas -->
+            <line x1="12" y1="35" x2="23" y2="35" stroke="#8c6239" stroke-width="2.5" />
+            <!-- Tirantes -->
+            <line x1="12" y1="35" x2="20" y2="20" stroke="#8c6239" stroke-width="2" />
+            <!-- Tubo sillín -->
+            <line x1="23" y1="35" x2="20" y2="20" stroke="#8c6239" stroke-width="2.5" />
+            <!-- Sillín -->
+            <line x1="16" y1="18" x2="23" y2="18" stroke="#3e2723" stroke-width="3.5" stroke-linecap="round" />
+            <!-- Tubo diagonal -->
+            <line x1="23" y1="35" x2="32" y2="20" stroke="#8c6239" stroke-width="2.5" />
+            <!-- Tubo superior -->
+            <line x1="20" y1="20" x2="32" y2="20" stroke="#8c6239" stroke-width="2.5" />
+            <!-- Horquilla -->
+            <line x1="38" y1="35" x2="33" y2="17" stroke="#8c6239" stroke-width="2.5" />
+            <!-- Manillar stem -->
+            <line x1="33" y1="17" x2="32" y2="12" stroke="#8c6239" stroke-width="2" />
+            <!-- Manillar -->
+            <line x1="28" y1="12" x2="35" y2="12" stroke="#3e2723" stroke-width="3" stroke-linecap="round" />
+            <!-- Cesta decorativa frontal -->
+            <rect x="35" y="15" width="6" height="5" rx="1" fill="#d6b49a" stroke="#8c6239" stroke-width="1" />
+            <!-- Corazón flotante arriba de la bici -->
+            <text x="21" y="10" font-size="11" fill="#b56576" font-family="sans-serif">❤</text>
+          </g>
+        </g>
+      </svg>
+
+      <!-- Estación 1: Conocerse -->
+      <div class="station-card" id="station-1">
+        <div class="station-header">
+          <span class="coffee-cup-icon">✨</span>
+          <span class="station-date">9 Ago, 2025</span>
+        </div>
+        <h3 class="station-title">El Cruce de Caminos</h3>
+        <p class="station-desc">El día que nos conocimos por primera vez. Un encuentro casual que empezó una bonita complicidad.</p>
+        <div class="chat-snip">
+          <div class="chat-line pwd">Pwd: "Que bueno que nos conocimosssssssssss"</div>
+          <div class="chat-line amor">Amorcito: "Siii, qué bueno"</div>
+        </div>
+      </div>
+
+      <!-- Estación 2: El Chat y Bicis -->
+      <div class="station-card" id="station-2">
+        <div class="station-header">
+          <span class="coffee-cup-icon">🚲</span>
+          <span class="station-date">11 Ago, 2025</span>
+        </div>
+        <h3 class="station-title">El Primer Plan</h3>
+        <p class="station-desc">Nuestra primera conversación oficial. Te invité a las bicis y me confesaste que no tenías bicicleta...</p>
+        <div class="chat-snip">
+          <div class="chat-line pwd">Pwd: "Hay que ir a las bicis y por cafe"</div>
+          <div class="chat-line amor">Amorcito: "Pero no tengo bici..."</div>
+          <div class="chat-line amor">Amorcito: "Me vas a tener que apuchar (empujar) jajaj"</div>
+        </div>
+      </div>
+
+      <!-- Estación 3: Desvelo y Números -->
+      <div class="station-card" id="station-3">
+        <div class="station-header">
+          <span class="coffee-cup-icon">🌙</span>
+          <span class="station-date">Chat Stats</span>
+        </div>
+        <h3 class="station-title">Noches de Desvelo</h3>
+        <p class="station-desc">Chateamos de más. Con 129,721 mensajes totales, nuestro pico máximo ocurre a medianoche 🦉.</p>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-num">1,694</div>
+            <div class="stat-label">Stickers (Amor) 🧸</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1,826</div>
+            <div class="stat-label">Fotos (Pwd) 📸</div>
+          </div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-num">1,747</div>
+            <div class="stat-label">Veces dijimos "Te quiero" 💕</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estación 4: El Beso -->
+      <div class="station-card" id="station-4">
+        <div class="station-header">
+          <span class="coffee-cup-icon">👩‍❤️‍💋‍👨</span>
+          <span class="station-date">1 Abr, 2026</span>
+        </div>
+        <h3 class="station-title">El Beso Inesperado</h3>
+        <p class="station-desc">Cuando te ibas al baño y te estábamos esperando, te robé un beso que no esperabas. ¡Sentiste súper bonito!</p>
+        <div class="chat-snip">
+          <div class="chat-line amor">Amorcito: "Como senti de bonito cuando te acercaste... me diste un beso"</div>
+        </div>
+      </div>
+
+      <!-- Estación 5: Final / Novios -->
+      <div class="station-card" id="station-5">
+        <div class="final-station-content">
+          <div class="station-header">
+            <span class="coffee-cup-icon">☕</span>
+            <span class="station-date">Relación Oficial</span>
+          </div>
+          <h3 class="station-title">Cafetería del Amor</h3>
+          <p class="station-desc" style="max-width: 320px;">
+            ¡Hemos llegado al final de la ruta! Prepara un café caliente interactivo para abrir una carta muy especial de mi parte.
+          </p>
+          
+          <button class="btn-brew" id="btn-brew-coffee" type="button">
+            ☕ Preparar Café de Amor
+          </button>
+          
+          <!-- Carta de Amor Expandible -->
+          <div class="love-letter-container" id="love-letter">
+            <h4 class="love-letter-title">Para mi hermosa novia</h4>
+            <div class="love-letter-body">
+              <p style="margin-bottom: 12px;">Mi amorcito precioso,</p>
+              <p style="margin-bottom: 12px;">
+                Ver este camino recorrido en bici me recuerda lo lindo que ha sido coincidir contigo desde agosto del año pasado. Gracias por tus risas, tu compañía, tus postres y los cafés compartidos. 
+              </p>
+              <p style="margin-bottom: 12px;">
+                Me encanta poder llamarte mi novia oficial. Prometo que no faltarán los paseos, las salidas y los desvelos platicando contigo.
+              </p>
+              <p class="love-letter-signature">Con todo mi amor, tu novio.</p>
+            </div>
+            
+            <!-- Generador de sorpresas -->
+            <div class="surprise-box">
+              <h5 style="font-family: var(--font-title); font-size: 0.9rem; color: var(--accent-rose-dark); margin-bottom: 8px;">🎁 Generador de Recuerdos</h5>
+              <div class="surprise-quote" id="surprise-quote-box">
+                Haz clic en el botón para recordar un diálogo o momento gracioso...
+              </div>
+              <button class="btn-surprise" id="btn-get-surprise" type="button">
+                Generar Detalle ✨
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navegación final -->
+    <div class="route-footer">
+      <button class="btn-cozy" id="btn-restart-intro" style="background: transparent; border: 2px solid #8c6239; color: #8c6239; box-shadow: none;" type="button">
+        Volver al Inicio 🔄
+      </button>
+    </div>
+  </section>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    "use strict";
+
+    // 1. BANCO DE FRASES REALES
+    const MEMORY_QUOTES = [
+      "Amorcito ❣️: 'No valoras mi hermosa presencia' | Pwd: 'Tu la mia 😉, ni me ibas a poner si llegué.'",
+      "Amorcito ❣️: 'Sabes que se me antoja... un café.' | Pwd: 'Vamos! A las 12 AM.' ☕",
+      "Amorcito ❣️: 'Tengo una maruchan que se me antoja, pero no puedo comer café y maruchan a la vez.' 😂",
+      "Amorcito ❣️: 'De regreso me debo bañar por que andaremos apestosos tras andar en bici' 🚲",
+      "Pwd: 'Me gustó mucho verte ahora mi hermosa novia.' | Amorcito ❣️: 'Mi novio bonito.' 😍",
+      "Amorcito ❣️: 'Como puedes pensar que tu novia te desea el mal. De todas maneras soy tu novia amor.' ❤️",
+      "Amorcito ❣️: 'Eres la mejor novia, la más guapa y encantadora novia que has tenido.' 👑",
+      "Pwd: 'Ahora va nacer Aurora.' | Amorcito ❣️: 'Netaaa, que nerviossss.' 👶",
+      "Amorcito ❣️: '¿A dónde irías de viaje?' | Amorcito: 'Primero hawai, vietnam y después a ver las auroras.' 🌌",
+      "Amorcito ❣️: 'Te extraño amorcito bonito... ya te extraño amor.' (Dicho más de 200 veces 🥺)"
+    ];
+
+    // 2. ELEMENTOS DEL DOM
+    const screenIntro = document.getElementById('screen-intro');
+    const screenRoute = document.getElementById('screen-route');
+    const btnStartRoute = document.getElementById('btn-start-route');
+    const btnRestartIntro = document.getElementById('btn-restart-intro');
+    
+    const decorContainer = document.getElementById('decor-container');
+    const bikePath = document.getElementById('bike-path');
+    const bikeRider = document.getElementById('bike-rider');
+    const timelineContainer = document.getElementById('timeline-container');
+    const stationCards = document.querySelectorAll('.station-card');
+    
+    const btnBrewCoffee = document.getElementById('btn-brew-coffee');
+    const loveLetter = document.getElementById('love-letter');
+    const btnGetSurprise = document.getElementById('btn-get-surprise');
+    const surpriseQuoteBox = document.getElementById('surprise-quote-box');
+
+    // 3. ELEMENTOS DE FONDO FLOTANTES (CAFÉ Y CORAZONES)
+    const DECOR_ICONS = ['☕', '🍁', '🍪', '❤️', '🌸', '✨'];
+    function buildBackgroundDecorations() {
+      decorContainer.innerHTML = '';
+      // 35 elementos distribuidos en la altura total de la ruta para efecto parallax
+      for (let i = 0; i < 35; i++) {
+        const item = document.createElement('div');
+        item.className = 'decor-item';
+        item.textContent = DECOR_ICONS[Math.floor(Math.random() * DECOR_ICONS.length)];
+        item.style.left = (Math.random() * 85 + 5) + 'vw';
+        item.style.top = (Math.random() * 2900 + 100) + 'px';
+        item.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        item.style.transform = `rotate(${Math.random() * 360}deg)`;
+        decorContainer.appendChild(item);
+      }
+    }
+
+    // Rotar decoraciones de fondo en base al scroll
+    function rotateDecorations() {
+      const scrollY = window.scrollY;
+      const items = document.querySelectorAll('.decor-item');
+      items.forEach((item, idx) => {
+        const speed = (idx % 3 + 1) * 0.15;
+        item.style.transform = `rotate(${scrollY * speed}deg)`;
+      });
+    }
+
+    // 4. TRANSICIONES DE PANTALLA CON FADE SUAVE Y PREMIUM
+    btnStartRoute.addEventListener('click', () => {
+      screenIntro.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      screenIntro.style.opacity = '0';
+      screenIntro.style.transform = 'scale(0.97)';
+      
+      setTimeout(() => {
+        screenIntro.style.display = 'none';
+        
+        screenRoute.classList.add('active');
+        screenRoute.style.opacity = '0';
+        screenRoute.style.transform = 'scale(0.97)';
+        screenRoute.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        
+        // Forzar reflujo
+        screenRoute.offsetHeight;
+        
+        screenRoute.style.opacity = '1';
+        screenRoute.style.transform = 'scale(1)';
+        window.scrollTo(0, 0);
+        initBikePathAnimation();
+      }, 400);
+    });
+
+    btnRestartIntro.addEventListener('click', () => {
+      screenRoute.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      screenRoute.style.opacity = '0';
+      screenRoute.style.transform = 'scale(0.97)';
+      
+      setTimeout(() => {
+        screenRoute.classList.remove('active');
+        loveLetter.style.display = 'none';
+        btnBrewCoffee.style.display = 'inline-flex';
+        
+        screenIntro.style.display = 'flex';
+        screenIntro.style.opacity = '0';
+        screenIntro.style.transform = 'scale(0.97)';
+        screenIntro.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        
+        // Forzar reflujo
+        screenIntro.offsetHeight;
+        
+        screenIntro.style.opacity = '1';
+        screenIntro.style.transform = 'scale(1)';
+        window.scrollTo(0, 0);
+      }, 400);
+    });
+
+    // 5. CÁLCULO DE LA BICICLETA SIGUIENDO EL CAMINO SVG CON OPTIMIZACIÓN Y PARCHES DE MÓVIL
+    const desktopPath = "M 200,100 C 320,300 80,500 200,700 C 320,900 80,1100 200,1300 C 320,1500 80,1700 200,1900 C 320,2100 80,2300 200,2500 C 320,2700 80,2850 200,2950";
+    const mobilePath = "M 60,100 C 80,300 40,500 60,700 C 80,900 40,1100 60,1300 C 80,1500 40,1700 60,1900 C 80,2100 40,2300 60,2500 C 80,2700 40,2850 60,2950";
+
+    let pathLength = 0;
+    let containerTop = 0;
+    let containerHeight = 0;
+    let cardOffsets = [];
+
+    function adjustBikePath() {
+      const isMobile = window.innerWidth < 500;
+      const targetD = isMobile ? mobilePath : desktopPath;
+      if (bikePath.getAttribute('d') !== targetD) {
+        bikePath.setAttribute('d', targetD);
+      }
+    }
+
+    function cacheLayoutGeometry() {
+      containerTop = timelineContainer.offsetTop;
+      containerHeight = timelineContainer.clientHeight;
+      
+      cardOffsets = Array.from(stationCards).map(card => {
+        return {
+          element: card,
+          top: card.offsetTop || parseInt(window.getComputedStyle(card).top) || 0
+        };
+      });
+    }
+
+    function initBikePathAnimation() {
+      adjustBikePath();
+      pathLength = bikePath.getTotalLength();
+      
+      // Esperar brevemente a que se asiente el layout para lecturas correctas de geometría
+      setTimeout(() => {
+        cacheLayoutGeometry();
+        window.removeEventListener('scroll', handleRouteScroll);
+        window.addEventListener('scroll', handleRouteScroll);
+        window.removeEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
+        handleRouteScroll();
+      }, 50);
+    }
+
+    function handleResize() {
+      adjustBikePath();
+      pathLength = bikePath.getTotalLength();
+      cacheLayoutGeometry();
+      handleRouteScroll();
+    }
+
+    function handleRouteScroll() {
+      if (!screenRoute.classList.contains('active')) return;
+      
+      const windowHeight = window.innerHeight;
+      const scrollTop = window.scrollY - containerTop;
+      const scrollMax = containerHeight - windowHeight * 0.8;
+      
+      let pct = 0;
+      if (scrollMax > 0) {
+        pct = Math.max(0, Math.min(100, (scrollTop / scrollMax) * 100));
+      }
+
+      // 1. Obtener la distancia y punto a lo largo del path
+      const distance = (pct / 100) * pathLength;
+      const point = bikePath.getPointAtLength(distance);
+      
+      // 2. Obtener un punto ligeramente más adelante para calcular la rotación
+      const pointAhead = bikePath.getPointAtLength(Math.min(pathLength, distance + 2));
+      const angle = Math.atan2(pointAhead.y - point.y, pointAhead.x - point.x) * 180 / Math.PI;
+
+      // 3. Aplicar la transformación de posición y rotación a la bicicleta
+      bikeRider.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`);
+
+      // 4. Activar los hitos (tarjetas) al pasar por su altura respectiva
+      cardOffsets.forEach(cardData => {
+        if (point.y >= cardData.top - 120) {
+          cardData.element.classList.add('active');
+        } else {
+          cardData.element.classList.remove('active');
+        }
+      });
+
+      // 5. Parallax y rotación de decoraciones de fondo
+      rotateDecorations();
+    }
+
+    // 6. EVENTOS DE CARTA DE AMOR Y DETALLES
+    btnBrewCoffee.addEventListener('click', () => {
+      btnBrewCoffee.style.display = 'none';
+      loveLetter.style.display = 'block';
+      
+      // Desplazar suavemente para centrar la carta en pantalla
+      setTimeout(() => {
+        const letterRect = loveLetter.getBoundingClientRect();
+        window.scrollBy({
+          top: letterRect.top - 80,
+          behavior: 'smooth'
+        });
+        launchConfettiHearts();
+      }, 100);
+    });
+
+    btnGetSurprise.addEventListener('click', () => {
+      surpriseQuoteBox.classList.remove('highlight');
+      
+      setTimeout(() => {
+        const randIdx = Math.floor(Math.random() * MEMORY_QUOTES.length);
+        surpriseQuoteBox.innerHTML = `<strong>Recuerdo guardado:</strong><br>"${MEMORY_QUOTES[randIdx]}"`;
+        surpriseQuoteBox.classList.add('highlight');
+        launchConfettiHearts(10);
+      }, 50);
+    });
+
+    // Lanzador de corazones decorativos
+    function launchConfettiHearts(count = 25) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.style.position = 'fixed';
+          heart.style.zIndex = '9999';
+          heart.innerHTML = ['❤️', '💖', '💕', '🥰', '☕', '🌸'][Math.floor(Math.random() * 6)];
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.top = '105vh';
+          heart.style.fontSize = (Math.random() * 16 + 14) + 'px';
+          heart.style.transition = 'all 3.5s cubic-bezier(0.075, 0.82, 0.165, 1)';
+          document.body.appendChild(heart);
+          
+          setTimeout(() => {
+            heart.style.transform = `translateY(-110vh) translateX(${(Math.random() - 0.5) * 160}px) rotate(${Math.random() * 360}deg)`;
+            heart.style.opacity = '0';
+          }, 50);
+          
+          setTimeout(() => heart.remove(), 4000);
+        }, i * 80);
+      }
+    }
+
+    // Inicializar decoraciones de fondo
+    buildBackgroundDecorations();
+  </script>
 
 </body>
 </html>
