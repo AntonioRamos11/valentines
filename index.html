@@ -525,12 +525,302 @@
       color: white;
     }
 
-    .route-footer {
-      margin-top: 40px;
+    }
+
+    /* ================= PARTE 2: WHATSAPP WRAPPED (TEMA OSCURO Y GLASSMORPHISM) ================= */
+    .transition-divider {
+      width: 100%;
+      max-width: 440px;
+      margin: 80px auto 40px auto;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      padding: 0 24px;
+    }
+
+    .transition-divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #8c6239, transparent);
+      z-index: -1;
+    }
+
+    .transition-text {
+      background: #f6efe2;
+      padding: 0 16px;
+      font-family: var(--font-title);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--coffee-brown);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wrapped-section {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      background: linear-gradient(180deg, #2b1a17 0%, #1e1210 100%);
+      border-radius: 36px;
+      border: 2px solid rgba(140, 98, 57, 0.15);
+      box-shadow: 0 20px 50px rgba(62, 39, 35, 0.15);
+      color: #fff8f5;
+      z-index: 10;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .wrapped-glow {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(181, 101, 118, 0.25) 0%, rgba(181, 101, 118, 0) 70%);
+      filter: blur(25px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #glow-1 { top: -40px; left: -40px; }
+    #glow-2 { bottom: 20px; right: -40px; }
+
+    .wrapped-title {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 2rem;
+      text-align: center;
+      color: #ffb5a7;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .wrapped-subtitle {
+      font-size: 0.85rem;
+      text-align: center;
+      color: #d6c5b3;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 5;
+      line-height: 1.4;
+    }
+
+    .wrapped-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 5;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wrapped-card.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .wrapped-card-title {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #ffb5a7;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chatter-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chatter-bar-wrapper {
+      position: relative;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chatter-bar-pwd {
+      width: 0%;
+      background: linear-gradient(90deg, #8d6e63, #a07148);
+      height: 100%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chatter-bar-amor {
+      width: 0%;
+      background: linear-gradient(90deg, #b56576, #f0a6ca);
+      height: 100%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chatter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+    }
+
+    .label-pwd { color: #fdfbf7; font-weight: 600; }
+    .label-amor { color: #fdfbf7; font-weight: 600; }
+
+    .duel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .duel-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .duel-box:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .duel-icon {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      display: inline-block;
+      transition: transform 0.4s;
+    }
+
+    .duel-box:hover .duel-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .duel-value {
+      font-family: var(--font-title);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .duel-label {
+      font-size: 0.7rem;
+      color: #d6c5b3;
+      line-height: 1.2;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 130px;
+      margin-top: 10px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .chart-bar-group {
       display: flex;
       flex-direction: column;
       align-items: center;
+      flex: 1;
+    }
+
+    .chart-bar {
+      width: 24px;
+      background: linear-gradient(180deg, #ffb5a7 0%, rgba(181, 101, 118, 0.4) 100%);
+      border-radius: 4px 4px 0 0;
+      height: 0;
+      transition: height 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .chart-bar-label {
+      font-size: 0.65rem;
+      color: #d6c5b3;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .chart-bar-value {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: #fff;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.5s ease 1s;
+    }
+
+    .chart-bar-group.animate .chart-bar-value {
+      opacity: 1;
+    }
+
+    .thermometer-container {
+      display: flex;
+      flex-direction: column;
       gap: 12px;
+    }
+
+    .love-meter-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .love-meter-item {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .love-meter-badge {
+      font-size: 1.4rem;
+    }
+
+    .love-meter-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .love-meter-num {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .love-meter-lbl {
+      font-size: 0.68rem;
+      color: #d6c5b3;
     }
   </style>
 </head>
@@ -719,6 +1009,120 @@
 
     </div>
 
+    <!-- Divisor de Transición a Parte 2 -->
+    <div class="transition-divider">
+      <span class="transition-text">📊 Parte 2: WhatsApp Wrapped: Amorcito Edition 💖</span>
+    </div>
+
+    <!-- Sección de Estadísticas (Wrapped) -->
+    <section class="wrapped-section" id="wrapped-stats-container">
+      <div class="wrapped-glow" id="glow-1"></div>
+      <div class="wrapped-glow" id="glow-2"></div>
+      
+      <h2 class="wrapped-title">Nuestros Números</h2>
+      <p class="wrapped-subtitle">Análisis real de 129,721 mensajes de puro cariño (Ago 2025 - May 2026)</p>
+
+      <!-- Tarjeta 1: El Parlanchín -->
+      <div class="wrapped-card" id="wrapped-card-chatter">
+        <h3 class="wrapped-card-title">🗣️ ¿Quién habla más?</h3>
+        <p style="font-size: 0.82rem; color: #d6c5b3; margin-bottom: 14px; line-height: 1.4;">
+          Enviamos un promedio impresionante de <strong>450 mensajes al día</strong>. ¡Alguien habla por los codos!
+        </p>
+        <div class="chatter-container">
+          <div class="chatter-bar-wrapper">
+            <div class="chatter-bar-pwd" id="bar-pwd" style="width: 0%"></div>
+            <div class="chatter-bar-amor" id="bar-amor" style="width: 0%"></div>
+          </div>
+          <div class="chatter-labels">
+            <span class="label-pwd" id="label-pwd">Pwd: 0% (77,771)</span>
+            <span class="label-amor" id="label-amor">Amorcito: 0% (51,950)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Multimedia -->
+      <div class="wrapped-card" id="wrapped-card-media">
+        <h3 class="wrapped-card-title">🧸 Duelo de Multimedia</h3>
+        <p style="font-size: 0.82rem; color: #d6c5b3; margin-bottom: 14px; line-height: 1.4;">
+          Tú eres el fotógrafo oficial y ella la reina indiscutible de la ternura.
+        </p>
+        <div class="duel-grid">
+          <div class="duel-box">
+            <span class="duel-icon">📸</span>
+            <div class="duel-value">1,826</div>
+            <div class="duel-label">Fotos de Pwd</div>
+          </div>
+          <div class="duel-box">
+            <span class="duel-icon">🧸</span>
+            <div class="duel-value">1,694</div>
+            <div class="duel-label">Stickers de Amorcito</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3: Desvelos -->
+      <div class="wrapped-card" id="wrapped-card-desvelos">
+        <h3 class="wrapped-card-title">🌙 El Ritmo de los Desvelos</h3>
+        <p style="font-size: 0.82rem; color: #d6c5b3; margin-bottom: 10px; line-height: 1.4;">
+          Nuestro pico de conversación ocurre a medianoche. ¡Dos búhos desvelados! 🦉
+        </p>
+        <div class="chart-container">
+          <div class="chart-bar-group" id="bar-group-22">
+            <div class="chart-bar" id="bar-22" style="height: 0%">
+              <span class="chart-bar-value">11k</span>
+            </div>
+            <span class="chart-bar-label">10 PM</span>
+          </div>
+          <div class="chart-bar-group" id="bar-group-23">
+            <div class="chart-bar" id="bar-23" style="height: 0%">
+              <span class="chart-bar-value">16.8k</span>
+            </div>
+            <span class="chart-bar-label">11 PM</span>
+          </div>
+          <div class="chart-bar-group" id="bar-group-00">
+            <div class="chart-bar" id="bar-00" style="height: 0%">
+              <span class="chart-bar-value">18.1k</span>
+            </div>
+            <span class="chart-bar-label">12 AM</span>
+          </div>
+          <div class="chart-bar-group" id="bar-group-01">
+            <div class="chart-bar" id="bar-01" style="height: 0%">
+              <span class="chart-bar-value">11.6k</span>
+            </div>
+            <span class="chart-bar-label">1 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 4: Termómetro de Palabras -->
+      <div class="wrapped-card" id="wrapped-card-words">
+        <h3 class="wrapped-card-title">💕 Termómetro del Amor</h3>
+        <p style="font-size: 0.82rem; color: #d6c5b3; margin-bottom: 14px; line-height: 1.4;">
+          Los "te quiero" son cotidianos, pero cuando decimos "te amo" es algo verdaderamente especial.
+        </p>
+        <div class="thermometer-container">
+          <div class="love-meter-wrapper">
+            <div class="love-meter-item">
+              <span class="love-meter-badge">🌸</span>
+              <div class="love-meter-info">
+                <span class="love-meter-num">1,747</span>
+                <span class="love-meter-lbl">veces dijimos "Te quiero"</span>
+              </div>
+            </div>
+          </div>
+          <div class="love-meter-wrapper">
+            <div class="love-meter-item" style="border-color: rgba(240, 166, 202, 0.4); background: rgba(240, 166, 202, 0.05);">
+              <span class="love-meter-badge">💖</span>
+              <div class="love-meter-info">
+                <span class="love-meter-num">19</span>
+                <span class="love-meter-lbl">veces dijimos "Te amo" (¡Valiosísimos!)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Navegación final -->
     <div class="route-footer">
       <button class="btn-cozy" id="btn-restart-intro" style="background: transparent; border: 2px solid #8c6239; color: #8c6239; box-shadow: none;" type="button">
@@ -836,6 +1240,22 @@
         screenIntro.style.opacity = '1';
         screenIntro.style.transform = 'scale(1)';
         window.scrollTo(0, 0);
+
+        // Resetear animaciones de Wrapped para la próxima vez
+        document.querySelectorAll('.wrapped-card').forEach(card => {
+          card.classList.remove('reveal');
+        });
+        document.getElementById('bar-pwd').style.width = '0%';
+        document.getElementById('bar-amor').style.width = '0%';
+        document.getElementById('bar-22').style.height = '0%';
+        document.getElementById('bar-23').style.height = '0%';
+        document.getElementById('bar-00').style.height = '0%';
+        document.getElementById('bar-01').style.height = '0%';
+        document.querySelectorAll('.chart-bar-group').forEach(group => {
+          group.classList.remove('animate');
+        });
+        
+        initWrappedAnimations();
       }, 400);
     });
 
@@ -979,6 +1399,87 @@
 
     // Inicializar decoraciones de fondo
     buildBackgroundDecorations();
+
+    // 7. INTERSECTION OBSERVER PARA LA PARTE 2 (WRAPPED)
+    let wrappedObserver = null;
+    function initWrappedAnimations() {
+      const cards = document.querySelectorAll('.wrapped-card');
+      
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.12
+      };
+
+      if (wrappedObserver) {
+        wrappedObserver.disconnect();
+      }
+
+      wrappedObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            card.classList.add('reveal');
+            
+            // Disparar animación específica de la tarjeta
+            if (card.id === 'wrapped-card-chatter') {
+              animateChatterBars();
+            } else if (card.id === 'wrapped-card-desvelos') {
+              animateDesvelosChart();
+            }
+            
+            wrappedObserver.unobserve(card);
+          }
+        });
+      }, observerOptions);
+
+      cards.forEach(card => {
+        wrappedObserver.observe(card);
+      });
+    }
+
+    function animateChatterBars() {
+      const barPwd = document.getElementById('bar-pwd');
+      const barAmor = document.getElementById('bar-amor');
+      const labelPwd = document.getElementById('label-pwd');
+      const labelAmor = document.getElementById('label-amor');
+
+      // Animar anchos de barra
+      barPwd.style.width = '60%';
+      barAmor.style.width = '40%';
+
+      // Animar conteo numérico de porcentajes
+      animateValue(labelPwd, 0, 60, 1500, "Pwd: %val%% (77,771)");
+      animateValue(labelAmor, 0, 40, 1500, "Amorcito: %val%% (51,950)");
+    }
+
+    function animateDesvelosChart() {
+      document.getElementById('bar-22').style.height = '60%';
+      document.getElementById('bar-23').style.height = '92%';
+      document.getElementById('bar-00').style.height = '100%';
+      document.getElementById('bar-01').style.height = '64%';
+      
+      document.querySelectorAll('.chart-bar-group').forEach(group => {
+        group.classList.add('animate');
+      });
+    }
+
+    function animateValue(element, start, end, duration, formatStr) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const currentVal = Math.floor(progress * (end - start) + start);
+        element.textContent = formatStr.replace('%val%', currentVal);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Inicializar Wrapped al cargar
+    initWrappedAnimations();
   </script>
 
 </body>
