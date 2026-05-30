@@ -282,7 +282,43 @@
       #station-2 { top: 850px; }
       #station-3 { top: 1450px; }
       #station-4 { top: 2050px; }
-      #station-5 { top: 2680px; }
+      #station-5 {
+        top: 2680px;
+        left: 15px !important;
+        right: 15px !important;
+        width: auto !important;
+      }
+      
+      /* Ajustes de Wrapped para celulares */
+      .transition-text {
+        font-size: clamp(0.7rem, 3.7vw, 0.85rem) !important;
+        padding: 5px 14px !important;
+      }
+      .wrapped-section {
+        width: calc(100% - 30px) !important;
+        margin: 0 auto 40px auto !important;
+        padding: 24px 16px !important;
+        border-radius: 28px !important;
+      }
+      .wrapped-card {
+        padding: 16px !important;
+        border-radius: 20px !important;
+        margin-bottom: 20px !important;
+      }
+      .duel-box {
+        padding: 10px 4px !important;
+        border-radius: 12px !important;
+      }
+      .love-meter-item {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+      }
+      .love-meter-badge {
+        font-size: 1.2rem !important;
+      }
+      .love-meter-num {
+        font-size: 1.05rem !important;
+      }
     }
 
     /* Cabecera de la estación */
@@ -551,14 +587,22 @@
 
     .transition-text {
       background: #f6efe2;
-      padding: 0 16px;
+      padding: 6px 18px;
       font-family: var(--font-title);
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--coffee-brown);
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
+      max-width: 90%;
+      text-align: center;
+      border-radius: 99px;
+      border: 1px solid rgba(140, 98, 57, 0.15);
+      box-shadow: 0 4px 10px rgba(93, 64, 55, 0.04);
+      line-height: 1.3;
+      box-sizing: border-box;
     }
 
     .wrapped-section {
